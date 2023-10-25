@@ -1,19 +1,21 @@
 export function Task(props){
-    var { taskName, taskState, onClickTask } = props;
+    var { task, onUpdate, onDelete, onClickTask } = props;
 
     const handleClickTask = () => {
-        taskState = !taskState;
-        onClickTask(taskName, taskState);
+        task.taskState = !task.taskState;
+        onClickTask(task);
     };
 
     return (
         <li>
-            <label htmlFor={taskName}>{taskName}
+            <label htmlFor={task.taskName}>{task.taskName}
             <input type="checkbox"
-            defaultChecked={taskState}
-            name={taskName}
+            defaultChecked={task.taskState}
+            name={task.taskName}
             onClick={handleClickTask}/>
             </label>
+            <button onClick={() => onUpdate(task)}>Update Task</button>
+            <button onClick={() => onDelete(task)}>Delete Task</button>
         </li>
     );
 }

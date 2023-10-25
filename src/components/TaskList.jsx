@@ -1,40 +1,45 @@
 import { useEffect, useState } from 'react'
 import { Task } from "./Task"
+import { useTasks } from "../hooks/useTasks";
 
-export function TaskList(props){
-    const { taskList } = props;
-    const [tasks, setCheckedTasks] = useState( {} );
+export function TaskList(){
+    const [tasks, addTask, updateTask, deleteTask] = useTasks();
 
-    // Maneja el click del task
-    const handleCheckedClick = (taskName, taskState) => {
-        // Copia del task
-        let newTasks = {...tasks};
-        newTasks[`${taskName}`] = {"done": taskState};
-        setCheckedTasks(newTasks);
-        localStorage.setItem("checkedTasks", JSON.stringify(newTasks));
+    const handleAddTask = () => {
+        let taskName = prompt("Enter the description of the task:")
+        let task = {
+            taskName: taskName
+        }
+        addTask(task);
+    };
+
+    const handleUpdateTask = (task) => {
+        let taskName = prompt("Enter the description of the task:")
+        task.taskName = taskName;
+        addTask(task);
+    };
+
+    const handleDeleteTask = (task) => {
+         deleteTask(task);
     };
 
     const setDefaultChecked = (task) => {
-        // Guardar estado de tasks
-        if(tasks[`${task.taskName}`] && JSON.stringify(tasks) !== "{}"){
-            return tasks[`${task.taskName}`]["done"];
-        }
-        return task.taskState;
+        updateTask(task);
     }
 
-    useEffect(() =>{
-        const newTasks = JSON.parse(localStorage.getItem("checkedTasks"));
-        if(newTasks !== null) setCheckedTasks(newTasks);
-    }, []);
-
     return (
+    <>
         <ul>
-            {taskList.map((task) => (
+            {tasks.map((task) => (
                 <Task
-                taskName={ task.taskName }
-                taskState={ setDefaultChecked(task) }
-                onClickTask={handleCheckedClick}/>
+                key= { task.id }
+                task={ task }
+                onCheckedTask={setDefaultChecked}
+                onUpdate={handleUpdateTask}
+                onDelete={handleDeleteTask}/>
             ))}
         </ul>
+        <button onClick={handleAddTask}>Add Task</button>
+    </>
     );
 };
