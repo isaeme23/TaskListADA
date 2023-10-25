@@ -28,7 +28,7 @@ function App() {
   return (
   <>
     <Header />
-    <TaskList list={tasks} />
+    <TaskList taskList={tasks} />
     </>
   );
 }
